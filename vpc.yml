@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "VPC with Public and Private Subnets in Different Availability Zones"
+
+Parameters:
+  VpcCIDRBlock:
+    Type: String
+    Default: "10.0.0.0/20"
+    Description: "CIDR block for the VPC"
+
+Resources:
+  MyVPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: !Ref VpcCIDRBlock
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: MyIGW
+
+  AttachGateway:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  PublicSubnet1a:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.0.0/24"
+      AvailabilityZone: "us-east-1b"
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1a
+
+  PublicSubnet1b:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.1.0/24"
+      AvailabilityZone: "us-east-1c"
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1b
+
+  PublicSubnet1c:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.2.0/24"
+      AvailabilityZone: "us-east-1d"
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1c
+
+  PublicSubnet1d:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.3.0/24"
+      AvailabilityZone: "us-east-1e"
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1d
+
+  PrivateSubnet2a:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.4.0/24"
+      AvailabilityZone: "us-east-1b"
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet2a
+
+  PrivateSubnet2b:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.5.0/24"
+      AvailabilityZone: "us-east-1c"
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet2b
+
+  PrivateSubnet2c:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.6.0/24"
+      AvailabilityZone: "us-east-1d"
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet2c
+
+  PrivateSubnet2d:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.7.0/24"
+      AvailabilityZone: "us-east-1e"
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet2d
+
+Outputs:
+  VpcId:
+    Value: !Ref MyVPC
+  PublicSubnets:
+    Value: !Join [",", [!Ref PublicSubnet1a, !Ref PublicSubnet1b, !Ref PublicSubnet1c, !Ref PublicSubnet1d]]
+  PrivateSubnets:
+    Value: !Join [",", [!Ref PrivateSubnet2a, !Ref PrivateSubnet2b, !Ref PrivateSubnet2c, !Ref PrivateSubnet2d]]
